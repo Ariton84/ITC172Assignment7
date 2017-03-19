@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Community_AssistModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Contact">
+    <Key>
+      <PropertyRef Name="ContactKey" />
+    </Key>
+    <Property Name="ContactKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ContactNumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ContactTypeKey" Type="Int32" />
+    <Property Name="PersonKey" Type="Int32" />
+    <NavigationProperty Name="ContactType" Relationship="Self.FK__Contact__Contact__4222D4EF" FromRole="Contact" ToRole="ContactType" />
+    <NavigationProperty Name="Person" Relationship="Self.FK__Contact__PersonK__4316F928" FromRole="Contact" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="ContactType">
+    <Key>
+      <PropertyRef Name="ContactTypeKey" />
+    </Key>
+    <Property Name="ContactTypeKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ContactTypeName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Contacts" Relationship="Self.FK__Contact__Contact__4222D4EF" FromRole="ContactType" ToRole="Contact" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="EmployeeKey" />
+    </Key>
+    <Property Name="EmployeeKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PersonKey" Type="Int32" />
+    <Property Name="EmployeeHireDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="EmployeeAnnualSalary" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="Person" Relationship="Self.FK__Employee__Person__44FF419A" FromRole="Employee" ToRole="Person" />
+    <NavigationProperty Name="Positions" Relationship="Self.EmployeePosition" FromRole="Employee" ToRole="Position" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="PersonKey" />
+    </Key>
+    <Property Name="PersonKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PersonLastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PersonFirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PersonEmail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PersonPassWord" Type="Binary" MaxLength="500" FixedLength="false" />
+    <Property Name="PersonEntryDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PersonPassWordSeed" Type="Int32" />
+    <NavigationProperty Name="Contacts" Relationship="Self.FK__Contact__PersonK__4316F928" FromRole="Person" ToRole="Contact" />
+    <NavigationProperty Name="Employees" Relationship="Self.FK__Employee__Person__44FF419A" FromRole="Person" ToRole="Employee" />
+    <NavigationProperty Name="PersonAddresses" Relationship="Self.FK__PersonAdd__Perso__4E88ABD4" FromRole="Person" ToRole="PersonAddress" />
+  </EntityType>
+  <EntityType Name="PersonAddress">
+    <Key>
+      <PropertyRef Name="PersonAddressKey" />
+    </Key>
+    <Property Name="PersonAddressKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PersonAddressApt" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PersonAddressStreet" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PersonAddressCity" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PersonAddressState" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PersonAddressZip" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PersonKey" Type="Int32" />
+    <NavigationProperty Name="Person" Relationship="Self.FK__PersonAdd__Perso__4E88ABD4" FromRole="PersonAddress" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Position">
+    <Key>
+      <PropertyRef Name="PositionKey" />
+    </Key>
+    <Property Name="PositionKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PositionName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PositionDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Employees" Relationship="Self.EmployeePosition" FromRole="Position" ToRole="Employee" />
+  </EntityType>
+  <Association Name="FK__Contact__Contact__4222D4EF">
+    <End Role="ContactType" Type="Self.ContactType" Multiplicity="0..1" />
+    <End Role="Contact" Type="Self.Contact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ContactType">
+        <PropertyRef Name="ContactTypeKey" />
+      </Principal>
+      <Dependent Role="Contact">
+        <PropertyRef Name="ContactTypeKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Contact__PersonK__4316F928">
+    <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+    <End Role="Contact" Type="Self.Contact" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonKey" />
+      </Principal>
+      <Dependent Role="Contact">
+        <PropertyRef Name="PersonKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Employee__Person__44FF419A">
+    <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonKey" />
+      </Principal>
+      <Dependent Role="Employee">
+        <PropertyRef Name="PersonKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PersonAdd__Perso__4E88ABD4">
+    <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+    <End Role="PersonAddress" Type="Self.PersonAddress" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonKey" />
+      </Principal>
+      <Dependent Role="PersonAddress">
+        <PropertyRef Name="PersonKey" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="EmployeePosition">
+    <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+    <End Role="Position" Type="Self.Position" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="Community_AssistEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Contacts" EntityType="Self.Contact" />
+    <EntitySet Name="ContactTypes" EntityType="Self.ContactType" />
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="People" EntityType="Self.Person" />
+    <EntitySet Name="PersonAddresses" EntityType="Self.PersonAddress" />
+    <EntitySet Name="Positions" EntityType="Self.Position" />
+    <AssociationSet Name="FK__Contact__Contact__4222D4EF" Association="Self.FK__Contact__Contact__4222D4EF">
+      <End Role="ContactType" EntitySet="ContactTypes" />
+      <End Role="Contact" EntitySet="Contacts" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Contact__PersonK__4316F928" Association="Self.FK__Contact__PersonK__4316F928">
+      <End Role="Person" EntitySet="People" />
+      <End Role="Contact" EntitySet="Contacts" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Employee__Person__44FF419A" Association="Self.FK__Employee__Person__44FF419A">
+      <End Role="Person" EntitySet="People" />
+      <End Role="Employee" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PersonAdd__Perso__4E88ABD4" Association="Self.FK__PersonAdd__Perso__4E88ABD4">
+      <End Role="Person" EntitySet="People" />
+      <End Role="PersonAddress" EntitySet="PersonAddresses" />
+    </AssociationSet>
+    <AssociationSet Name="EmployeePosition" Association="Self.EmployeePosition">
+      <End Role="Employee" EntitySet="Employees" />
+      <End Role="Position" EntitySet="Positions" />
+    </AssociationSet>
+    <FunctionImport Name="usp_Register">
+      <Parameter Name="lastname" Mode="In" Type="String" />
+      <Parameter Name="firstname" Mode="In" Type="String" />
+      <Parameter Name="email" Mode="In" Type="String" />
+      <Parameter Name="password" Mode="In" Type="String" />
+      <Parameter Name="ApartmentNumber" Mode="In" Type="String" />
+      <Parameter Name="Street" Mode="In" Type="String" />
+      <Parameter Name="City" Mode="In" Type="String" />
+      <Parameter Name="State" Mode="In" Type="String" />
+      <Parameter Name="Zipcode" Mode="In" Type="String" />
+      <Parameter Name="HomePhone" Mode="In" Type="String" />
+      <Parameter Name="WorkPhone" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+</Schema>
